@@ -7,7 +7,7 @@ from data.classes.pieces.Knight import Knight
 from data.classes.pieces.Queen import Queen
 from data.classes.pieces.King import King
 from data.classes.pieces.Pawn import Pawn
-
+import random
 class Board:
 	def __init__(self, width, height):
 		self.width = width
@@ -97,9 +97,16 @@ class Board:
 						)
 
 	def robot(self):
-		pass
-		#if self.turn == 'black':
-		#	print("hello")
+		moves = {}
+		pieces = []
+		if self.turn == 'black':
+			for piece in [i.occupying_piece for i in self.squares]:
+				if piece != None and piece.color == self.turn and not piece.get_valid_moves(self) == []:
+					piece.move(self, piece.get_valid_moves(self)[0])
+					self.turn = 'white'
+					return
+					#moves[piece] = piece.get_valid_moves(self)
+
 	def handle_click(self, mx, my):
 		x = mx // self.square_width
 		y = my // self.square_height
@@ -167,6 +174,7 @@ class Board:
 		for piece in [i.occupying_piece for i in self.squares]:
 			if piece != None and piece.color == color and not piece.get_valid_moves(self) == []:
 					moves.append(piece.notation)
+
 
 		if moves == []:
 			output = True

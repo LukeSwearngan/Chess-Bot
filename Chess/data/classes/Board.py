@@ -102,10 +102,15 @@ class Board:
 		if self.turn == 'black':
 			for piece in [i.occupying_piece for i in self.squares]:
 				if piece != None and piece.color == self.turn and not piece.get_valid_moves(self) == []:
-					piece.move(self, piece.get_valid_moves(self)[0])
-					self.turn = 'white'
-					return
-					#moves[piece] = piece.get_valid_moves(self)
+					moves[piece] = piece.get_valid_moves(self)
+					pieces.append(piece)
+					#piece.move(self, piece.get_valid_moves(self)[0])
+					#self.turn = 'white'
+					#return
+			p = random.randint(0, len(pieces) - 1)
+			pieces[p].move(self, pieces[p].get_valid_moves(self)[random.randint(0, len(pieces[p].get_valid_moves(self))-1)])
+			self.turn = 'white'
+			#print(self.squares)
 
 	def handle_click(self, mx, my):
 		x = mx // self.square_width
@@ -199,3 +204,7 @@ class Board:
 
 		for square in self.squares:
 			square.draw(display)
+	def copy(self, new):
+		new.squares = self.squares.copy()
+		new.turn = self.turn
+		return new

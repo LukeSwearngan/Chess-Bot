@@ -16,7 +16,12 @@ class Board:
 		self.square_height = height // 8
 		self.selected_piece = None
 		self.turn = 'white'
-
+		i = random.randint(0, 1)
+		print (i)
+		if i == 1:
+			self.robot_turn = 'white'
+		else:
+			self.robot_turn = 'black'
 		self.config = [
 			['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
 			['b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b '],
@@ -99,7 +104,7 @@ class Board:
 	def robot(self):
 		moves = {}
 		pieces = []
-		if self.turn == 'black':
+		if self.turn == self.robot_turn:
 			for piece in [i.occupying_piece for i in self.squares]:
 				if piece != None and piece.color == self.turn and not piece.get_valid_moves(self) == []:
 					moves[piece] = piece.get_valid_moves(self)
@@ -109,7 +114,10 @@ class Board:
 					#return
 			p = random.randint(0, len(pieces) - 1)
 			pieces[p].move(self, pieces[p].get_valid_moves(self)[random.randint(0, len(pieces[p].get_valid_moves(self))-1)])
-			self.turn = 'white'
+			if self.turn == 'white':
+				self.turn = 'black'
+			else:
+				self.turn = 'white'
 			#print(self.squares)
 
 	def handle_click(self, mx, my):

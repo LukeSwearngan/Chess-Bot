@@ -12,6 +12,8 @@ class Board:
 	def __init__(self, width, height, side):
 		self.width = width
 		self.height = height
+		self.repeat = {}
+		self.list_piece = []
 		self.square_width = width // 8
 		self.square_height = height // 8
 		self.selected_piece = None
@@ -281,6 +283,25 @@ class Board:
 
 		for square in self.squares:
 			square.draw(display)
+   	def piece_list(self):
+        	self.list_piece = []
+        	for square in self.squares:
+            		if square.occupying_piece != None:
+                		self.list_piece.append(square)
+	def recur(self, depth, ev):
+        	# for piece in self.squares:
+        	# if p != None:
+       		#	self.test += len(p.get_valid_moves(self))
+        	#print(len(self.list_piece))
+        	for i in self.list_piece:
+            		for j in i.occupying_piece.get_valid_moves(self):
+                		e = eval_board(self.squares)
+                		e.move(j, i)
+                		if e not in self.repeat.keys():
+                    			self.test += 1
+                    			self.repeat[e] = e
+                    			if depth > 0:
+                        			self.recur(depth - 1, ev)
 	def copy(self, new):
 		new.squares = self.squares.copy()
 		new.turn = self.turn

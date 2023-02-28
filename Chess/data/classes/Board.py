@@ -9,35 +9,43 @@ from data.classes.pieces.King import King
 from data.classes.pieces.Pawn import Pawn
 import random
 class Board:
-	def __init__(self, width, height):
+	def __init__(self, width, height, side):
 		self.width = width
 		self.height = height
 		self.square_width = width // 8
 		self.square_height = height // 8
 		self.selected_piece = None
 		self.turn = 'white'
-		i = random.randint(0, 1)
-		print (i)
-		if i == 1:
-			self.robot_turn = 'white'
-		else:
-			self.robot_turn = 'black'
-		self.config = [
-			['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
-			['b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b '],
-			['','','','','','','',''],
-			['','','','','','','',''],
-			['','','','','','','',''],
-			['','','','','','','',''],
-			['w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w '],
-			['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
-		]
-
-		self.squares = self.generate_squares()
+		self.side = side
+		if self.side == 'white':
+			self.config = [
+				['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
+				['b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b '],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w '],
+				['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
+			]
+		self.squares = self.generate_squaresWhite()
+		if self.side == 'black':
+			self.config = [
+				['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR'],
+				['w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w '],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['','','','','','','',''],
+				['b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b '],
+				['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR'],
+			]
+		self.squares = self.generate_squaresWhite()
+		
 
 		self.setup_board()
 
-	def generate_squares(self):
+	def generate_squaresWhite(self):
 		output = []
 		for y in range(8):
 			for x in range(8):
@@ -51,6 +59,21 @@ class Board:
 				)
 
 		return output
+
+	""" def generate_squaresBlack(self):
+		output = []
+		for y in range(7,-1,-1):
+			for x in range(7,-1,-1):
+				output.append(
+					Square(
+						x,
+						y,
+						self.square_width,
+						self.square_height
+					)
+				)
+
+		return output """
 
 
 	def setup_board(self):
@@ -136,6 +159,52 @@ class Board:
 			if clicked_square.occupying_piece.color == self.turn:
 				self.selected_piece = clicked_square.occupying_piece
 
+	def eval(self):
+
+		wValue = 0
+		bValue = 0
+	
+		for piece in [i.occupying.piece for i in self.squares]:
+				if piece[1] == 'R':
+						if piece[0] == 'w':
+							wValue += 525
+						else:
+							bValue += 525
+
+				elif piece[1] == 'N':
+						if piece[0] == 'w':
+							wValue += 300
+						else:
+							bValue += 300
+						
+
+				elif piece[1] == 'B':
+						if piece[0] == 'w':
+							wValue += 300
+						else:
+							bValue += 300
+						
+
+				elif piece[1] == 'Q':
+						if piece[0] == 'w':
+							wValue += 1000
+						else:
+							bValue += 1000
+						
+
+				elif piece[1] == 'K':
+						if piece[0] == 'w':
+							wValue += 10000
+						else:
+							bValue += 10000
+						
+
+
+				elif piece[1] == ' ':
+						if piece[0] == 'w':
+							wValue += 100
+						else:
+							bValue += 100
 
 	def is_in_check(self, color, board_change=None): # board_change = [(x1, y1), (x2, y2)]
 		output = False

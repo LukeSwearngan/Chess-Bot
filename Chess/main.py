@@ -90,11 +90,5 @@ while running:
 		running = False
 
 	draw(screen)
- 
-	 	 	
-		
-         
-         
-         
-         
+
          

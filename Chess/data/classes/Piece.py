@@ -7,7 +7,8 @@ class Piece:
 		self.y = pos[1]
 		self.color = color
 		self.has_moved = False
-
+		self.leftEP = False
+		self.rightEP = False
 	def move(self, board, square, force=False):
 
 		for i in board.squares:
@@ -31,7 +32,52 @@ class Piece:
 						self.color,
 						board
 					)
+					print('pawn promoted')
+				#en passant
+				if (self.leftEP or self.rightEP):
+					if board.side == 'white':
+						if self.color == 'white':
+							squareBack = board.get_square_from_pos((self.x, self.y + 1))
+							if squareBack.occupying_piece.notation == ' ':
+								squareBack.occupying_piece = None
 
+						elif self.color == 'black':
+							squareBack = board.get_square_from_pos((self.x, self.y - 1))
+							if squareBack.occupying_piece.notation == ' ':
+								squareBack.occupying_piece = None
+							
+
+					elif board.side == 'black':
+						if self.color == 'black':
+							squareBack = board.get_square_from_pos((self.x, self.y + 1))
+							if squareBack.occupying_piece.notation == ' ':
+								squareBack.occupying_piece = None
+
+						elif self.color == 'white':
+							squareBack = board.get_square_from_pos((self.x, self.y - 1))
+							if squareBack.occupying_piece.notation == ' ':
+								squareBack.occupying_piece = None
+					
+    
+				if abs(prev_square.y - self.y) == 2:
+					
+					squareleft = board.get_square_from_pos((self.x - 1, self.y))
+					squareright = board.get_square_from_pos((self.x + 1, self.y))
+					if self.x != 0:
+						if squareleft.occupying_piece is not None:
+							if squareleft.occupying_piece.notation == ' ':
+								squareleft.occupying_piece.rightEP = True
+								
+								
+					if self.x != 7:
+						if squareright.occupying_piece is not None:
+							if squareright.occupying_piece.notation == ' ':
+								squareright.occupying_piece.leftEP = True	
+								
+
+				
+	
+			
 			# Move rook if king castles
 			if self.notation == 'K':
 				if prev_square.x - self.x == 2:
@@ -40,11 +86,12 @@ class Piece:
 				elif prev_square.x - self.x == -2:
 					rook = board.get_piece_from_pos((7, self.y))
 					rook.move(board, board.get_square_from_pos((5, self.y)), force=True)
-
+			
 			return True
 		else:
 			board.selected_piece = None
 			return False
+		
 
 
 	def get_moves(self, board):

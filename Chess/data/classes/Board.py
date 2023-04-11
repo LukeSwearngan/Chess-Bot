@@ -1,11 +1,11 @@
 import pygame
-from Chess.data.classes.Square import Square
-from Chess.data.classes.pieces.Rook import Rook
-from Chess.data.classes.pieces.Bishop import Bishop
-from Chess.data.classes.pieces.Knight import Knight
-from Chess.data.classes.pieces.Queen import Queen
-from Chess.data.classes.pieces.King import King
-from Chess.data.classes.pieces.Pawn import Pawn
+from data.classes.Square import Square
+from data.classes.pieces.Rook import Rook
+from data.classes.pieces.Bishop import Bishop
+from data.classes.pieces.Knight import Knight
+from data.classes.pieces.Queen import Queen
+from data.classes.pieces.King import King
+from data.classes.pieces.Pawn import Pawn
 import random
 class Board:
 	def __init__(self, width, height, side):
@@ -148,12 +148,15 @@ class Board:
 		x = mx // self.square_width
 		y = my // self.square_height
 		clicked_square = self.get_square_from_pos((x, y))
+		passant_square = self.get_square_from_pos((x, y))
 		if self.selected_piece is None:
 			if clicked_square.occupying_piece is not None:
 				if clicked_square.occupying_piece.color == self.turn:
 					self.selected_piece = clicked_square.occupying_piece
-
+		
 		elif self.selected_piece.move(self, clicked_square):
+			clicked_square.occupying_piece.rightEP = False
+			clicked_square.occupying_piece.leftEP = False
 			self.turn = 'white' if self.turn == 'black' else 'black'
 
 		elif clicked_square.occupying_piece is not None:
@@ -262,7 +265,6 @@ class Board:
 		if moves == []:
 			output = True
 		return output
-
 
 	def get_square_from_pos(self, pos):
 		for square in self.squares:

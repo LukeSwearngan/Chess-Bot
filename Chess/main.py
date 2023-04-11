@@ -63,25 +63,29 @@ def draw(display):
 
 running = True
 while running:
-    mx, my = pygame.mouse.get_pos()
-    board.robot()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                board.handle_click(mx, my)
-    if board.is_in_checkmate('black'):
-        if board.is_in_check('black'):
-            print('White wins!')
-        else:
-            print('Stalemate!')
-        running = False
-    elif board.is_in_checkmate('white'):
-        if board.is_in_check('white'):
-            print('Black wins!')
-        else:
-            print('Stalemate!')
-        running = False
 
-    draw(screen)
+	mx, my = pygame.mouse.get_pos()
+	#board.robot()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			running = False
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			if event.button == 1:
+				board.handle_click(mx, my)
+	if board.is_in_checkmate('black'):
+		if board.is_in_check('black'):
+			print('White wins!')
+		else:
+			print('Stalemate!')
+		running = False
+	elif board.is_in_checkmate('white'):
+		if board.is_in_check('white'):
+			print('Black wins!')
+		else:
+			print('Stalemate!')
+		running = False
+
+	draw(screen)
+
+         
+

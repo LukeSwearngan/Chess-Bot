@@ -49,7 +49,7 @@ while selectMenu:
             selectMenu = False
     pygame.display.update()
 
-WINDOW_SIZE = (700, 700)
+WINDOW_SIZE = (1000, 700)
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 
@@ -63,7 +63,6 @@ def draw(display):
 
 running = True
 while running:
-
 	mx, my = pygame.mouse.get_pos()
 	#board.robot()
 	for event in pygame.event.get():
@@ -86,6 +85,4 @@ while running:
 		running = False
 
 	draw(screen)
-
-         
 

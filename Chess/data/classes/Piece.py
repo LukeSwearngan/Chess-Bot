@@ -19,10 +19,14 @@ class Piece:
 			self.pos, self.x, self.y = square.pos, square.x, square.y
 
 			prev_square.occupying_piece = None
+			if square.occupying_piece is not None:
+				if self.color == 'white':
+					board.whiteCaps.append(square.occupying_piece)
+				else: board.blackCaps.append(square.occupying_piece)
 			square.occupying_piece = self
 			board.selected_piece = None
 			self.has_moved = True
-
+	
 			# Pawn promotion
 			if self.notation == ' ':
 				if self.y == 0 or self.y == 7:
@@ -39,11 +43,13 @@ class Piece:
 						if self.color == 'white':
 							squareBack = board.get_square_from_pos((self.x, self.y + 1))
 							if squareBack.occupying_piece.notation == ' ':
+								board.whiteCaps.append(squareBack.occupying_piece)
 								squareBack.occupying_piece = None
 
 						elif self.color == 'black':
 							squareBack = board.get_square_from_pos((self.x, self.y - 1))
 							if squareBack.occupying_piece.notation == ' ':
+								board.blackCaps.append(squareBack.occupying_piece)
 								squareBack.occupying_piece = None
 							
 
@@ -51,11 +57,13 @@ class Piece:
 						if self.color == 'black':
 							squareBack = board.get_square_from_pos((self.x, self.y + 1))
 							if squareBack.occupying_piece.notation == ' ':
+								board.blackCaps.append(squareBack.occupying_piece)
 								squareBack.occupying_piece = None
 
 						elif self.color == 'white':
 							squareBack = board.get_square_from_pos((self.x, self.y - 1))
 							if squareBack.occupying_piece.notation == ' ':
+								board.whiteCaps.append(squareBack.occupying_piece)
 								squareBack.occupying_piece = None
 					
     
@@ -73,7 +81,7 @@ class Piece:
 						if squareright.occupying_piece is not None:
 							if squareright.occupying_piece.notation == ' ':
 								squareright.occupying_piece.leftEP = True	
-								
+						
 
 				
 	

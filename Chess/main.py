@@ -3,15 +3,20 @@ import random
 from data.classes.Board import Board
 
 pygame.init()
+
 WINDOW_SIZE = (700,400)
 pygame_icon = pygame.image.load('data/imgs/chessterhead.png')
 pygame.display.set_icon(pygame_icon)
+
 screen = pygame.display.set_mode(WINDOW_SIZE)
 black_img = pygame.image.load('data/imgs/b_king.png')
 white_img = pygame.image.load('data/imgs/w_king.png')
 
 pygame.display.set_caption("Select Your Pieces")
+
+
 class Button():
+
 	def __init__(self, x, y, image):
 		self.image = image
 		self.rect = self.image.get_rect()
@@ -41,9 +46,12 @@ whiterec = whitete.get_rect()
 blackrec = blackte.get_rect()
 whiterec.topleft = (85, 315)
 blackrec.topleft = (435, 315)
+
+
 selectMenu = True
 screen.fill("antiquewhite2")
 while selectMenu:
+
 	screen.blit(whitete, whiterec)
 	screen.blit(blackte, blackrec)
 	if white_button.draw():
@@ -61,6 +69,7 @@ while selectMenu:
 	pygame.display.update()
  
 WINDOW_SIZE = (1050, 900)
+
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Good Luck!")
 
@@ -82,6 +91,7 @@ chatrec = chatte.get_rect()
 chatrec.topleft = (700, 150)
 
 def draw(display):
+
 	display.fill('antiquewhite2')
 	
 	chessterhead = pygame.image.load('data/imgs/chessterhead.png')
@@ -93,8 +103,7 @@ def draw(display):
 	pygame.display.update()
 
 
-					
-    
+    pygame.display.update()
 
 running = True
 while running:
@@ -140,4 +149,3 @@ while running:
 			i.occupying_piece.img = pygame.transform.scale(i.occupying_piece.img, (40,40))
 	draw(screen)
 
-         

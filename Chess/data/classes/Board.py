@@ -1,4 +1,5 @@
 import pygame
+from data.classes.captSquare import captSquare
 from data.classes.Square import Square
 from data.classes.pieces.Rook import Rook
 from data.classes.pieces.Bishop import Bishop
@@ -13,11 +14,14 @@ class Board:
 		self.height = height
 		self.repeat = {}
 		self.list_piece = []
+		self.blackCaps = []
+		self.whiteCaps = []
 		self.square_width = width // 8
 		self.square_height = height // 8
 		self.selected_piece = None
 		self.turn = 'white'
 		self.side = side
+  
 		if self.side == 'white':
 			self.config = [
 				['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
@@ -29,7 +33,7 @@ class Board:
 				['w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w ', 'w '],
 				['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
 			]
-		self.squares = self.generate_squaresWhite()
+		
 		if self.side == 'black':
 			self.config = [
 				['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR'],
@@ -41,8 +45,10 @@ class Board:
 				['b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b ', 'b '],
 				['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR'],
 			]
-		self.squares = self.generate_squaresWhite()
 		
+		self.squares = self.generate_squaresWhite()
+  
+		self.capSquares = self.generate_capSquares()
 
 		self.setup_board()
 
@@ -60,7 +66,20 @@ class Board:
 				)
 
 		return output
+	def generate_capSquares(self):
+		output = []
+		for x in range(16):
+			for y in range(2):
+				output.append(
+					captSquare(
+						x,
+						y,
+						50,
+						50
+					)
+				)
 
+		return output
 	""" def generate_squaresBlack(self):
 		output = []
 		for y in range(7,-1,-1):
@@ -148,20 +167,21 @@ class Board:
 		x = mx // self.square_width
 		y = my // self.square_height
 		clicked_square = self.get_square_from_pos((x, y))
-		passant_square = self.get_square_from_pos((x, y))
-		if self.selected_piece is None:
-			if clicked_square.occupying_piece is not None:
+
+		if clicked_square is not None:
+			if self.selected_piece is None:
+				if clicked_square.occupying_piece is not None:
+					if clicked_square.occupying_piece.color == self.turn:
+						self.selected_piece = clicked_square.occupying_piece
+		
+			elif self.selected_piece.move(self, clicked_square):
+				clicked_square.occupying_piece.rightEP = False
+				clicked_square.occupying_piece.leftEP = False
+				self.turn = 'white' if self.turn == 'black' else 'black'
+
+			elif clicked_square.occupying_piece is not None:
 				if clicked_square.occupying_piece.color == self.turn:
 					self.selected_piece = clicked_square.occupying_piece
-		
-		elif self.selected_piece.move(self, clicked_square):
-			clicked_square.occupying_piece.rightEP = False
-			clicked_square.occupying_piece.leftEP = False
-			self.turn = 'white' if self.turn == 'black' else 'black'
-
-		elif clicked_square.occupying_piece is not None:
-			if clicked_square.occupying_piece.color == self.turn:
-				self.selected_piece = clicked_square.occupying_piece
 
 	def eval(self):
 
@@ -284,6 +304,12 @@ class Board:
 
 		for square in self.squares:
 			square.draw(display)
+   
+		for captSquare in self.capSquares:
+			captSquare.draw(display)
+
+		
+
 	def piece_list(self):
 		self.list_piece = []
 		for square in self.squares:
